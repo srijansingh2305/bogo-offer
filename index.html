@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOGO Offer Page</title>
+    <link rel="stylesheet" href="BogoOfferPage.css" />
+    <style>
+      .card-container {
+        width: 100%;
+        max-width: 341px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page-container">
+      <section class="card-container">
+        <div class="heading-row">
+          <span class="line"></span>
+          <h2 class="heading-text">YAY! It’s BOGO</h2>
+          <span class="line"></span>
+        </div>
+
+        <!-- Offer boxes -->
+        <div id="offers"></div>
+
+        <!-- Summary -->
+        <div class="summary-row">
+          <div class="free-delivery">Free Delivery</div>
+          <div class="total" id="total-display">Total : $10.00 USD</div>
+        </div>
+
+        <!-- Button -->
+        <button class="add-to-cart" id="add-to-cart">+ Add to Cart</button>
+
+        <div class="popup" id="popup" hidden>Added to cart!</div>
+
+        <footer class="footer">© Powered by Pumper</footer>
+      </section>
+    </main>
+
+    <script>
+      const offersData = [
+        { id: 1, units: 1, discount: "10% Off", price: 10 },
+        { id: 2, units: 2, discount: "20% Off", price: 18 },
+        { id: 3, units: 3, discount: "30% Off", price: 24 },
+      ];
+
+      let selectedBox = 1;
+
+      const offersContainer = document.getElementById("offers");
+      const totalDisplay = document.getElementById("total-display");
+      const popup = document.getElementById("popup");
+
+      function createDropdown(label) {
+        const select = document.createElement("select");
+        select.className = "dropdown";
+        const options =
+          label === "S"
+            ? ["S", "M", "L", "XL"]
+            : ["Black", "White", "Red", "Blue"];
+
+        const defaultOption = document.createElement("option");
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        defaultOption.textContent = label;
+        select.appendChild(defaultOption);
+
+        for (const opt of options) {
+          const o = document.createElement("option");
+          o.textContent = opt;
+          select.appendChild(o);
+        }
+        return select;
+      }
+
+      function renderOptions(unitCount) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "option-wrapper";
+
+        for (let i = 0; i < unitCount; i++) {
+          const row = document.createElement("div");
+          row.className = "option-row";
+
+          const label = document.createElement("span");
+          label.className = "option-label";
+          label.textContent = `#${i + 1}`;
+
+          row.appendChild(label);
+          row.appendChild(createDropdown("S"));
+          row.appendChild(createDropdown("Colour"));
+
+          wrapper.appendChild(row);
+        }
+
+        return wrapper;
+      }
+
+      function renderOffers() {
+        offersContainer.innerHTML = "";
+
+        offersData.forEach((offer) => {
+          const box = document.createElement("div");
+          box.className = `offer-box ${
+            selectedBox === offer.id ? "active" : ""
+          }`;
+          box.dataset.id = offer.id;
+
+          const header = document.createElement("div");
+          header.className = "offer-header";
+
+          const left = document.createElement("div");
+          left.className = "left";
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = "offer";
+          radio.checked = selectedBox === offer.id;
+
+          const unitDiscount = document.createElement("div");
+          unitDiscount.className = "unit-with-discount";
+
+          const unitLabel = document.createElement("span");
+          unitLabel.className = "unit-label";
+          unitLabel.innerHTML = `${offer.units} Unit
+           <span class="discount">${offer.discount}</span>`;
+
+          unitDiscount.appendChild(unitLabel);
+          if (offer.id === 1) {
+            const stdLabel = document.createElement("span");
+            stdLabel.className = "standard-price-label";
+            stdLabel.textContent = "Standard Price";
+            unitDiscount.appendChild(stdLabel);
+          }
+
+          left.appendChild(radio);
+          left.appendChild(unitDiscount);
+
+          const right = document.createElement("div");
+          right.className = "right";
+          right.innerHTML = `
+          <div class="price">$${offer.price.toFixed(2)} USD</div>
+          <div class="striked-price">$${(offer.units * 12).toFixed(2)} USD</div>
+        `;
+
+          header.appendChild(left);
+          header.appendChild(right);
+          box.appendChild(header);
+
+          if (offer.id === 2) {
+            const tag = document.createElement("div");
+            tag.className = "most-popular-tag";
+            tag.textContent = "MOST POPULAR";
+            box.appendChild(tag);
+          }
+
+          if (selectedBox === offer.id) {
+            const optionsSection = document.createElement("div");
+            optionsSection.className = "options-section";
+            optionsSection.appendChild(renderOptions(offer.units));
+            box.appendChild(optionsSection);
+          }
+
+          // Fix: Only change selection if the user clicks outside a dropdown
+          box.addEventListener("click", (e) => {
+            const tag = e.target.tagName.toLowerCase();
+            if (tag === "select" || tag === "option") return;
+            selectedBox = offer.id;
+            totalDisplay.textContent = `Total : $${offer.price.toFixed(2)} USD`;
+            renderOffers();
+          });
+
+          offersContainer.appendChild(box);
+        });
+      }
+
+      document.getElementById("add-to-cart").addEventListener("click", () => {
+        popup.hidden = false;
+        setTimeout(() => {
+          popup.hidden = true;
+          selectedBox = 1;
+          totalDisplay.textContent = `Total : $${offersData[0].price.toFixed(
+            2
+          )} USD`;
+          renderOffers();
+        }, 1000);
+      });
+
+      renderOffers();
+    </script>
+  </body>
+</html>
