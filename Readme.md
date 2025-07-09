@@ -27,7 +27,7 @@ This is a fully responsive front-end project that implements a Buy-One-Get-One (
 
 This project is hosted on **Render** as a static site.
 
-**Live Demo:** https://bogo-offer-83wk.onrender.com
+**Live Demo:** https://figma-bogo-offer.netlify.app/
 **GitHub Repo:** https://github.com/srijansingh2305/bogo-offer
 
 
