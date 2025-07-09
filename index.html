@@ -22,16 +22,16 @@
           <span class="line"></span>
         </div>
 
-        <!-- Offer boxes -->
+
         <div id="offers"></div>
 
-        <!-- Summary -->
+
         <div class="summary-row">
           <div class="free-delivery">Free Delivery</div>
           <div class="total" id="total-display">Total : $10.00 USD</div>
         </div>
 
-        <!-- Button -->
+
         <button class="add-to-cart" id="add-to-cart">+ Add to Cart</button>
 
         <div class="popup" id="popup" hidden>Added to cart!</div>
@@ -162,7 +162,7 @@
             box.appendChild(optionsSection);
           }
 
-          // Fix: Only change selection if the user clicks outside a dropdown
+
           box.addEventListener("click", (e) => {
             const tag = e.target.tagName.toLowerCase();
             if (tag === "select" || tag === "option") return;
